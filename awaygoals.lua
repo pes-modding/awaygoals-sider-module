@@ -2,6 +2,7 @@
 -- module that disables "Away Goals" in 2-legged matches in all competitions
 
 local m = { version = "v1.0" }
+local hex = memory.hex
 
 -- keyboard controls
 local toggle = {
@@ -61,12 +62,12 @@ local function find_patterns()
     for i, entry in ipairs(patch) do
         local addr = memory.search_process(entry.pattern)
         if not addr then
-            error(string.format("unable to find pattern %d. exiting", i))
+            error(string.format("unable to find pattern %d", i))
         end
         for _, c in ipairs(entry.changes) do
             local b = memory.read(addr + c.offset, 1)
             if b ~= c.old and b ~= c.new then
-                error(string.format("got unexpected value %s at %s. exiting", hex(b), hex(addr + c.offset)))
+                error(string.format("got unexpected value 0x%s at %s", hex(b), hex(addr + c.offset)))
             end
         end
         -- store the address in patch structure
@@ -97,7 +98,7 @@ local function set_away_goals_rule(enabled)
                 memory.write(baddr, c.new)
             end
             local now = memory.unpack("u8", memory.read(baddr, 1))
-            log(string.format("AG patch applied: %s: 0x%02x -> 0x%02x", memory.hex(baddr), was, now))
+            log(string.format("AG patch applied: %s: 0x%02x -> 0x%02x", hex(baddr), was, now))
         end
     end
     log(string.format("away-goals is now: %s", enabled and "ON" or "OFF"))
