@@ -1,5 +1,8 @@
 -- awaygoals.lua
 -- module that disables "Away Goals" in 2-legged matches in all competitions
+--
+-- credit: game reverse-engineering and lua module by juce.
+-- originally posted on Evo-Web: March 27, 2023
 
 local m = { version = "v1.0" }
 local hex = memory.hex
